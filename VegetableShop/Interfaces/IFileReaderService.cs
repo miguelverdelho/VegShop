@@ -9,7 +9,7 @@ namespace VegetableShop.Interfaces
 {
     public interface IFileReaderService : IBaseSingleton
     {
-        public Dictionary<string, decimal> LoadProducts();
-        public Dictionary<string, int> LoadPurchases();
+        public Dictionary<string, decimal> ReadProductsFromFile();
+        public Dictionary<string, int> ReadPurchasesFromFile();
     }
 }

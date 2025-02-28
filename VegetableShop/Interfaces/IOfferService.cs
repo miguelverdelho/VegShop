@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VegetableShop.Base;
 
 namespace VegetableShop.Interfaces
 {
-    class BaseInterface
+    public interface IOfferService :IBaseSingleton
     {
     }
 }

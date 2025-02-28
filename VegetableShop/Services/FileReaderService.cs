@@ -25,22 +25,28 @@ namespace VegetableShop.Services
             }            
         }
 
-        public Dictionary<string, decimal> LoadProducts()
+        public Dictionary<string, decimal> ReadProductsFromFile()
         {
             _logger.LogInformation($"Loading products from {_productsFilePath}");
 
             var products = ParseLines(_productsFilePath, decimal.Parse);
+
+            if (products.Count == 0)
+                throw new Exception("Products file is empty");
 
             _logger.LogInformation($"Loaded {products.Count} products");
 
             return products;
         }
 
-        public Dictionary<string, int> LoadPurchases()
+        public Dictionary<string, int> ReadPurchasesFromFile()
         {
             _logger.LogInformation($"Loading products from {_purchasesFilePath}");
 
             var purchases = ParseLines(_purchasesFilePath, int.Parse);
+
+            if(purchases.Count == 0) 
+                throw new Exception("Purchases file is empty");
 
             _logger.LogInformation($"Loaded {purchases.Count} purchases");
 

@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VegetableShop.Base;
 using VegetableShop.Models;
 
 namespace VegetableShop.Interfaces
 {
-    public interface IReceiptPrinterService : IBaseSingleton
+    public interface IOffer
     {
-        public void PrintReceipt(Receipt receipt);
+        public void Apply(ref Receipt receipt);
     }
 }

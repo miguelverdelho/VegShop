@@ -5,7 +5,7 @@ VisualStudioVersion = 17.13.35806.99
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VegetableShop", "VegetableShop.csproj", "{6CD22FEB-6910-414B-99BD-044F49FA8EC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VegetableShopUnitTests", "..\VegetableShopUnitTests\VegetableShopUnitTests.csproj", "{6D239AE5-96CA-8EDD-1F5F-03B843BCBECD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VegetableShop.UnitTests", "..\VegetableShopUnitTests\VegetableShop.UnitTests.csproj", "{6D239AE5-96CA-8EDD-1F5F-03B843BCBECD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -6,7 +6,5 @@ using System.Threading.Tasks;
 
 namespace VegetableShop.Base
 {
-    public interface IBaseScoped { }
-
     public interface IBaseSingleton { }
 }

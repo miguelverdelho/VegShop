@@ -1,5 +1,4 @@
-﻿
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using VegetableShop.Base;
 using VegetableShop.Interfaces;
@@ -23,27 +22,14 @@ namespace VegetableShop.Services
             if (!File.Exists(_productsFilePath) || !File.Exists(_purchasesFilePath))
             {
                 throw new FileNotFoundException("Input File not found.");
-            }
-            
+            }            
         }
 
         public Dictionary<string, decimal> LoadProducts()
         {
             _logger.LogInformation($"Loading products from {_productsFilePath}");
 
-            var products = new Dictionary<string, decimal>();
-            try
-            {
-                foreach (var line in File.ReadLines(_productsFilePath).Skip(1)) // Skip header
-                {
-                    var parts = line.Split(',');
-                    products[parts[0].Trim()] = decimal.Parse(parts[1].Trim());
-                }
-            }
-            catch(Exception ex)
-            {
-                throw new ArgumentException("Error loading products", ex);
-            }
+            var products = ParseLines(_productsFilePath, decimal.Parse);
 
             _logger.LogInformation($"Loaded {products.Count} products");
 
@@ -54,23 +40,29 @@ namespace VegetableShop.Services
         {
             _logger.LogInformation($"Loading products from {_purchasesFilePath}");
 
-            var purchases = new Dictionary<string, int>();
-            try
-            {
-                foreach (var line in File.ReadLines(_purchasesFilePath).Skip(1)) // Skip header
-                {
-                    var parts = line.Split(',');
-                    purchases[parts[0].Trim()] = int.Parse(parts[1].Trim());
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new ArgumentException("Error loading purchases", ex);
-            }
+            var purchases = ParseLines(_purchasesFilePath, int.Parse);
 
             _logger.LogInformation($"Loaded {purchases.Count} purchases");
 
             return purchases;
+        }
+
+        private Dictionary<string, T> ParseLines<T>(string filePath, Func<string, T> parseValue)
+        {
+            var dictionary = new Dictionary<string, T>();
+            try
+            {
+                foreach (var line in File.ReadLines(filePath).Skip(1)) // Skip header
+                {
+                    var parts = line.Split(',');
+                    dictionary[parts[0].Trim()] = parseValue(parts[1].Trim());
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException("Error parsing lines", ex);
+            }
+            return dictionary;
         }
     }
 }

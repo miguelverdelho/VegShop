@@ -22,7 +22,7 @@ namespace VegetableShop.Models
         public void ApplyDiscount(string product, decimal discount, string offerDescription)
         {
             _total -= discount;
-            AppliedOffers.Add($"{offerDescription} - Discount Applied: {discount:C}");
+            AppliedOffers.Add($"{offerDescription} - Discount Applied: {discount:C2}");
         }
 
         public string GenerateReceipt()

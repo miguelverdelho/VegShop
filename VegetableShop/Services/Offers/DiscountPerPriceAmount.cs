@@ -10,21 +10,21 @@ namespace VegetableShop.Services.Offers
 {
     public class DiscountPerPriceAmount : IOffer
     {
-        public string Product { get; }
+        public string RequiredProduct { get; }
         public decimal ThresholdAmount { get; }
         public decimal DiscountAmount { get; }
-        public string Description => $"For every {ThresholdAmount}€ spent on {Product}, get {DiscountAmount}€ off.";
+        public string Description => $"For every {ThresholdAmount}€ spent on {RequiredProduct}, get {DiscountAmount}€ off.";
 
         public DiscountPerPriceAmount(string product, decimal thresholdAmount, decimal discountAmount)
         {
-            Product = product;
+            RequiredProduct = product;
             ThresholdAmount = thresholdAmount;
             DiscountAmount = discountAmount;
         }
 
         public void Apply(ref Receipt receipt)
         {
-            var item = receipt.Items.FirstOrDefault(i => i.Product == Product);
+            var item = receipt.Items.FirstOrDefault(i => i.Product == RequiredProduct);
             if (item != null)
             {
                 int discountMultiples = (int)(item.PricePerUnit * item.Quantity / ThresholdAmount);
@@ -32,7 +32,7 @@ namespace VegetableShop.Services.Offers
 
                 if (totalDiscount > 0)
                 {
-                    receipt.ApplyDiscount(Product, totalDiscount, Description);
+                    receipt.ApplyDiscount(RequiredProduct, totalDiscount, Description);
                 }
             }
         }

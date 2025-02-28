@@ -15,17 +15,20 @@ namespace VegetableShop.Services
         private readonly ILogger<VegetableShopService> _logger;
         private readonly IFileReaderService _fileReaderService;
         private readonly IShoppingService _shoppingService;
+        private readonly IOfferService _offerService;
         private readonly IReceiptPrinterService _receiptPrinterService;
 
         public VegetableShopService(ILogger<VegetableShopService> logger,
             IFileReaderService fileReaderService, 
             IShoppingService shoppingService,
-            IReceiptPrinterService receiptPrinterService)
+            IReceiptPrinterService receiptPrinterService,
+            IOfferService offerService)
         {
             _fileReaderService = fileReaderService;
             _logger = logger;
             _shoppingService = shoppingService;
             _receiptPrinterService = receiptPrinterService;
+            _offerService = offerService;
         }
 
         public void Run()
@@ -40,6 +43,8 @@ namespace VegetableShop.Services
             }
 
             var receipt = _shoppingService.ProcessOrder();
+
+            _offerService.ApplyOffers(ref receipt);
 
             receipt.GenerateReceipt();
         }

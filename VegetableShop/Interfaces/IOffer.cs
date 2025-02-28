@@ -9,6 +9,7 @@ namespace VegetableShop.Interfaces
 {
     public interface IOffer
     {
+        public string RequiredProduct { get; }
         public void Apply(ref Receipt receipt);
     }
 }

@@ -10,12 +10,12 @@ namespace VegetableShop.Services.Offers
 {
     class GetFreeXFromMultipleY : IOffer
     {
-        public string FreeProduct { get; }
         public string RequiredProduct { get; }
+        public string FreeProduct { get; }
         public int QuantityRequired { get; }
         public string Description => $"Get 1 free {FreeProduct} for every {QuantityRequired} {RequiredProduct + (QuantityRequired > 1 ? "s" : "")} purchased.";
 
-        public GetFreeXFromMultipleY(string requiredProduct, string freeProduct, int quantityRequired) 
+        public GetFreeXFromMultipleY(string requiredProduct, int quantityRequired, string freeProduct) 
         {
             RequiredProduct = requiredProduct;
             FreeProduct = freeProduct;

@@ -26,10 +26,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="TestFiles\ProductsTestFile.csv">
+    <None Update="TestResources\ProductsTestFile.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestFiles\PurchasesTestFile.csv">
+    <None Update="TestResources\PurchasesTestFile.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

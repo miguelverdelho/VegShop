@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Configuration;
-using VegetableShop.Base;
-using VegetableShop.Services;
 using VegetableShop.Interfaces;
-using System.Globalization;
 
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;// to print euro sign
@@ -33,7 +26,7 @@ builder.Services.Scan(scan => scan
 var app = builder.Build();
 
 var serviceProvider = app.Services.GetService<IServiceProvider>();
-var vegetableShop = serviceProvider?.GetService<IVegetableShopService>();
+var vegetableShop = serviceProvider?.GetService<IVegetableShopOrchestratorService>();
 
 // Use the vegetableShop instance
 vegetableShop!.Run();

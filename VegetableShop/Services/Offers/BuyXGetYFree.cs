@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VegetableShop.Interfaces;
+﻿using VegetableShop.Interfaces;
 using VegetableShop.Models;
 
 namespace VegetableShop.Services.Offers
@@ -22,16 +17,18 @@ namespace VegetableShop.Services.Offers
             FreeQuantity = freeQuantity;
         }
 
-        public void Apply(ref Receipt receipt)
+        public Receipt Apply(Receipt receipt)
         {
             var item = receipt.Items.FirstOrDefault(i => i.Product == RequiredProduct);
             if (item != null && item.Quantity >= RequiredQuantity)
             {
-                int freeItems = (item.Quantity / RequiredQuantity) * FreeQuantity;
+                int freeItems = item.Quantity / RequiredQuantity * FreeQuantity;
                 decimal discount = freeItems * item.PricePerUnit;
 
                 receipt.ApplyDiscount(RequiredProduct, discount, Description);
             }
+
+            return receipt;
         }
     }
 

@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Configuration;
-using VegetableShop.Base;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using VegetableShop.Common;
 using VegetableShop.Interfaces;
 
 namespace VegetableShop.Services
@@ -8,9 +8,9 @@ namespace VegetableShop.Services
     public class FileReaderService : BaseService<FileReaderService>, IFileReaderService
     {
         private readonly string _productsFilePath = string.Empty;
-        private readonly string _purchasesFilePath  = string.Empty;
-        public FileReaderService(ILogger<FileReaderService> logger, IConfiguration configuration) : base(logger) 
-        {            
+        private readonly string _purchasesFilePath = string.Empty;
+        public FileReaderService(ILogger<FileReaderService> logger, IConfiguration configuration) : base(logger)
+        {
             var baseDirectory = Directory.GetCurrentDirectory();
             var fileConfigSection = configuration.GetSection("FileSettings") ?? throw new Exception("FileSettings not found in configuration");
             var relativeProductFilePath = fileConfigSection["ProductsFilePath"] ?? throw new Exception("ProductsFilePath not found in configuration");
@@ -22,7 +22,7 @@ namespace VegetableShop.Services
             if (!File.Exists(_productsFilePath) || !File.Exists(_purchasesFilePath))
             {
                 throw new FileNotFoundException("Input File not found.");
-            }            
+            }
         }
 
         public Dictionary<string, decimal> ReadProductsFromFile()
@@ -45,7 +45,7 @@ namespace VegetableShop.Services
 
             var purchases = ParseLines(_purchasesFilePath, int.Parse);
 
-            if(purchases.Count == 0) 
+            if (purchases.Count == 0)
                 throw new Exception("Purchases file is empty");
 
             _logger.LogInformation($"Loaded {purchases.Count} purchases");

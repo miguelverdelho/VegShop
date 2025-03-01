@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace VegetableShop.Models
+﻿namespace VegetableShop.Models
 {
     public class Receipt
     {
@@ -43,5 +37,5 @@ namespace VegetableShop.Models
             return receiptText;
         }
     }
-    
+
 }

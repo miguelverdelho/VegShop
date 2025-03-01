@@ -1,12 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Moq;
 using VegetableShop.Services;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using Xunit;
-using Microsoft.Extensions.Configuration;
-using VegetableShop.Models;
+using VegetableShop.UnitTests.Services.TestData;
 
 namespace VegetableShopUnitTests.Services
 {
@@ -16,15 +12,15 @@ namespace VegetableShopUnitTests.Services
         private const string PRODUCTS_FILE_SETTING = "ProductsFilePath";
         private const string PURCHASES_FILE_SETTING = "PurchasesFilePath";
         private FileReaderService? _fileReaderService;
-        private Mock<ILogger<FileReaderService>>? _mockLogger = new ();
-        private Mock<IConfiguration> _mockConfiguration = new ();
+        private Mock<ILogger<FileReaderService>>? _mockLogger = new();
+        private Mock<IConfiguration> _mockConfiguration = new();
         private string _productsTestFilePath;
         private string _purchasesTestFilePath;
 
         public FileReaderServiceUnitTests()
         {
-            _productsTestFilePath = Path.Combine(Directory.GetCurrentDirectory(), "TestFiles", "ProductsTestFile.csv");
-            _purchasesTestFilePath = Path.Combine(Directory.GetCurrentDirectory(), "TestFiles", "PurchasesTestFile.csv");
+            _productsTestFilePath = Path.Combine(Directory.GetCurrentDirectory(), "TestResources", "ProductsTestFile.csv");
+            _purchasesTestFilePath = Path.Combine(Directory.GetCurrentDirectory(), "TestResources", "PurchasesTestFile.csv");
             File.WriteAllLines(_purchasesTestFilePath, new List<string>());
             File.WriteAllLines(_productsTestFilePath, new List<string>());
 
@@ -95,7 +91,7 @@ namespace VegetableShopUnitTests.Services
         public void ReadPurchasesFromFile_ReturnsPurchases_ValidFile()
         {
             // Arrange
-            var purchases = FileReaderServiceTestData.ValidPurchases;
+            var purchases = FileReaderServiceMockData.ValidPurchases;
             File.WriteAllLines(_purchasesTestFilePath, purchases);
 
             // Act
@@ -103,7 +99,7 @@ namespace VegetableShopUnitTests.Services
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(3, result.Count);            
+            Assert.Equal(3, result.Count);
             foreach (var kvp in result)
             {
                 Assert.Contains($"{kvp.Key},{kvp.Value}", purchases);
@@ -114,7 +110,7 @@ namespace VegetableShopUnitTests.Services
         public void ReadPurchasesFromFile_ThrowsEmptyListException_EmptyValidFile()
         {
             // Arrange
-            var purchases = FileReaderServiceTestData.EmptyPurchases;
+            var purchases = FileReaderServiceMockData.EmptyPurchases;
             File.WriteAllLines(_productsTestFilePath, purchases);
 
             // Act & Assert
@@ -125,7 +121,7 @@ namespace VegetableShopUnitTests.Services
         public void ReadPurchasesFromFile_ThrowsArgumentException_InvalidFile()
         {
             // Arrange
-            var purchases =  FileReaderServiceTestData.InvalidPurchases;
+            var purchases = FileReaderServiceMockData.InvalidPurchases;
             File.WriteAllLines(_purchasesTestFilePath, purchases);
 
             // Act && Assert
@@ -138,7 +134,7 @@ namespace VegetableShopUnitTests.Services
         public void ReadProductsFromFile_ReturnsProducts_ValidFile()
         {
             // Arrange
-            var products = FileReaderServiceTestData.ValidProducts;
+            var products = FileReaderServiceMockData.ValidProducts;
             File.WriteAllLines(_productsTestFilePath, products);
 
             // Act
@@ -156,18 +152,18 @@ namespace VegetableShopUnitTests.Services
         public void ReadProductsFromFile_ThrowsArgumentException_InvalidFile()
         {
             // Arrange
-            var products = FileReaderServiceTestData.InvalidProducts;
+            var products = FileReaderServiceMockData.InvalidProducts;
             File.WriteAllLines(_productsTestFilePath, products);
 
             // Act && Assert
-            Assert.Throws<ArgumentException>(() =>  _fileReaderService?.ReadProductsFromFile());
+            Assert.Throws<ArgumentException>(() => _fileReaderService?.ReadProductsFromFile());
         }
 
         [Fact]
         public void ReadProductsFromFile_ThrowsEmptyListException_EmptyValidFile()
         {
             // Arrange
-            var products = FileReaderServiceTestData.EmptyProducts;
+            var products = FileReaderServiceMockData.EmptyProducts;
             File.WriteAllLines(_productsTestFilePath, products);
 
             // Act & Assert
@@ -180,14 +176,5 @@ namespace VegetableShopUnitTests.Services
         #endregion
     }
 
-    class FileReaderServiceTestData
-    {
-        internal static List<string> ValidProducts = new List<string> { "PRODUCT,PRICE", "Tomato,0.75", "Aubergine,0.9", "Carrot,1" };
-        internal static List<string> InvalidProducts = new List<string> { "Tomato","" };
-        internal static List<string> EmptyProducts = new List<string> { "" };
 
-        internal static List<string> ValidPurchases = new List<string> { "PRODUCT,QUANTITY", "Tomato,1", "Aubergine,2", "Carrot,3" };
-        internal static List<string> InvalidPurchases = new List<string> { "Tomato", "" };
-        internal static List<string> EmptyPurchases = new List<string> { "" };
-    }
 }

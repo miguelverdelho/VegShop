@@ -1,12 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VegetableShop.Services;
+using VegetableShop.UnitTests.Services.TestData;
 
 namespace VegetableShopUnitTests.Services
 {
@@ -25,8 +20,8 @@ namespace VegetableShopUnitTests.Services
         public void ValidateOrder_ReturnsTrue_WhenOrderIsValid()
         {
             // Arrange
-            var products = ShoppingServiceTestData.ValidProducts;
-            var purchases = ShoppingServiceTestData.ValidOrder;
+            var products = ShoppingServiceMockData.ValidProducts;
+            var purchases = ShoppingServiceMockData.ValidOrder;
             LoadItemsToService(products, purchases);
 
             // Act
@@ -40,8 +35,8 @@ namespace VegetableShopUnitTests.Services
         public void ValidateOrder_ReturnsFalse_WhenOrderIsEmpty()
         {
             // Arrange
-            var products = ShoppingServiceTestData.ValidProducts;
-            var purchases = ShoppingServiceTestData.EmptyOrder;
+            var products = ShoppingServiceMockData.ValidProducts;
+            var purchases = ShoppingServiceMockData.EmptyOrder;
             LoadItemsToService(products, purchases);
 
             // Act
@@ -55,9 +50,9 @@ namespace VegetableShopUnitTests.Services
         public void ValidateOrder_ReturnsFalse_WhenOrderContainsNonExisitingItem()
         {
             // Arrange
-            var purchases = ShoppingServiceTestData.NonExisitingItem;
-            var products = ShoppingServiceTestData.ValidProducts;
-            LoadItemsToService(products,purchases);
+            var purchases = ShoppingServiceMockData.NonExisitingItem;
+            var products = ShoppingServiceMockData.ValidProducts;
+            LoadItemsToService(products, purchases);
 
             // Act
             var result = _shoppingService?.ValidateOrder();
@@ -70,8 +65,8 @@ namespace VegetableShopUnitTests.Services
         public void ValidateOrder_ReturnsFalse_WhenOrderContainsNegativeQuantity()
         {
             // Arrange
-            var purchases = ShoppingServiceTestData.NegativeQuantityPurchase;
-            var products = ShoppingServiceTestData.ValidProducts;
+            var purchases = ShoppingServiceMockData.NegativeQuantityPurchase;
+            var products = ShoppingServiceMockData.ValidProducts;
             LoadItemsToService(products, purchases);
 
             // Act
@@ -85,8 +80,8 @@ namespace VegetableShopUnitTests.Services
         public void ValidateOrder_ReturnsFalse_WhenProductsContainsNegativePrice()
         {
             // Arrange
-            var purchases = ShoppingServiceTestData.ValidOrder;
-            var products = ShoppingServiceTestData.NegativePriceProduct;
+            var purchases = ShoppingServiceMockData.ValidOrder;
+            var products = ShoppingServiceMockData.NegativePriceProduct;
             LoadItemsToService(products, purchases);
 
             // Act
@@ -102,8 +97,8 @@ namespace VegetableShopUnitTests.Services
         public void ProcessOrder_ReturnsReceiptWithItems()
         {
             // Arrange
-            var products = ShoppingServiceTestData.ValidProducts;
-            var purchases = ShoppingServiceTestData.ValidOrder;
+            var products = ShoppingServiceMockData.ValidProducts;
+            var purchases = ShoppingServiceMockData.ValidOrder;
             LoadItemsToService(products, purchases);
 
             // Act
@@ -112,7 +107,7 @@ namespace VegetableShopUnitTests.Services
             // Assert
             Assert.NotNull(receipt);
             Assert.Equal(3, receipt.Items.Count);
-            foreach(var item in receipt.Items)
+            foreach (var item in receipt.Items)
             {
                 Assert.True(products.ContainsKey(item.Product) && products[item.Product] == item.PricePerUnit);
                 Assert.True(purchases.ContainsKey(item.Product) && purchases[item.Product] == item.Quantity);
@@ -123,8 +118,8 @@ namespace VegetableShopUnitTests.Services
         public void ProcessOrder_ReturnsReceiptWithEmptyItems_WhenPurchasesIsEmpty()
         {
             // Arrange
-            var products = ShoppingServiceTestData.ValidProducts;
-            var purchases = ShoppingServiceTestData.EmptyOrder;
+            var products = ShoppingServiceMockData.ValidProducts;
+            var purchases = ShoppingServiceMockData.EmptyOrder;
             LoadItemsToService(products, purchases);
 
             // Act
@@ -139,8 +134,8 @@ namespace VegetableShopUnitTests.Services
         public void ProcessOrder_ReturnsReceiptWithEmptyItems_WhenProductsIsEmpty()
         {
             // Arrange
-            var products = ShoppingServiceTestData.EmptyProducts;
-            var purchases = ShoppingServiceTestData.ValidOrder;
+            var products = ShoppingServiceMockData.EmptyProducts;
+            var purchases = ShoppingServiceMockData.ValidOrder;
             LoadItemsToService(products, purchases);
 
             // Act
@@ -162,42 +157,6 @@ namespace VegetableShopUnitTests.Services
         #endregion
     }
 
-    public static class ShoppingServiceTestData
-    {
-        public static Dictionary<string, decimal> ValidProducts = new()
-        {
-            {"Tomato", 0.75m},
-            {"Aubergine", 0.90m},
-            {"Carrot", 1.00m}
-        };
-
-        public static Dictionary<string, decimal> NegativePriceProduct = new()
-        {
-            {"Tomato", -0.75m},
-            {"Aubergine", 0.90m},
-            {"Carrot", 1.00m}
-        };
-
-        public static Dictionary<string, decimal> EmptyProducts = new();
-
-        public static Dictionary<string, int> ValidOrder = new()
-        {
-            {"Tomato", 3},
-            {"Aubergine", 25},
-            {"Carrot", 12}
-        };
-
-        public static Dictionary<string, int> NonExisitingItem = new()
-        {
-            {"NonExisitingItem", 1 }
-        };
-        
-        public static Dictionary<string, int> NegativeQuantityPurchase = new()
-        {
-            {"Tomato", -1 }
-        };
-
-        public static Dictionary<string, int> EmptyOrder = new();
-    }
+    
 
 }

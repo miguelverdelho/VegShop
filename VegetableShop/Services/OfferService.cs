@@ -1,39 +1,68 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VegetableShop.Base;
+using VegetableShop.Common;
 using VegetableShop.Interfaces;
 using VegetableShop.Models;
+using VegetableShop.Models.OffersConfig;
 using VegetableShop.Services.Offers;
 
 namespace VegetableShop.Services
 {
     public class OfferService : BaseService<OfferService>, IOfferService
     {
-        List<IOffer> _offers = new List<IOffer>();
+        private readonly List<IOffer> _offers = new();
 
-        public OfferService(ILogger<OfferService> logger) : base(logger)
+        public OfferService(ILogger<OfferService> logger, IConfiguration configuration) : base(logger)
         {
-            _offers.Add(new BuyXGetYFree("Tomato", 3, 1));
-            _offers.Add(new GetFreeXFromMultipleY("Aubergine", 10, "Carrot"));
-            _offers.Add(new DiscountPerPriceAmount("Carrot", 5, 0.5m));
+            LoadOffersFromConfig(configuration);
         }
 
-        public void ApplyOffers(ref Receipt receipt)
+        private void LoadOffersFromConfig(IConfiguration configuration)
         {
-            foreach (var item in receipt.Items)
+            var buyXGetYFreeOffers = configuration.GetSection("Offers:BuyXGetYFree").Get<List<BuyXGetYFreeConfig>>();
+            if (buyXGetYFreeOffers != null)
             {
-                //check if there are offers for this product
+                foreach (var offer in buyXGetYFreeOffers)
+                {
+                    _offers.Add(new BuyXGetYFree(offer.Product, offer.RequiredQuantity, offer.FreeQuantity));
+                }
+            }
+
+            var getFreeXFromMultipleYOffers = configuration.GetSection("Offers:GetFreeXFromMultipleY").Get<List<GetFreeXFromMultipleYConfig>>();
+            if (getFreeXFromMultipleYOffers != null)
+            {
+                foreach (var offer in getFreeXFromMultipleYOffers)
+                {
+                    _offers.Add(new GetFreeXFromMultipleY(offer.Product, offer.RequiredQuantity, offer.FreeProduct));
+                }
+            }
+
+            var discountPerPriceAmountOffers = configuration.GetSection("Offers:DiscountPerPriceAmount").Get<List<DiscountPerPriceAmountConfig>>();
+            if (discountPerPriceAmountOffers != null)
+            {
+                foreach (var offer in discountPerPriceAmountOffers)
+                {
+                    _offers.Add(new DiscountPerPriceAmount(offer.Product, offer.MinAmount, offer.Discount));
+                }
+            }
+        }
+
+        public Receipt ApplyOffers(Receipt receipt)
+        {
+            var receiptItems = receipt.Items;
+            foreach (var item in receiptItems)
+            {
                 var offers = _offers.Where(o => o.RequiredProduct == item.Product).ToList();
                 foreach (var offer in offers)
                 {
                     _logger.LogInformation($"Applying offer {offer.GetType().Name} for product {item.Product}");
-                    offer.Apply(ref receipt);
+                    receipt = offer.Apply(receipt);
                 }
             }
+            return receipt;
         }
     }
+
 }

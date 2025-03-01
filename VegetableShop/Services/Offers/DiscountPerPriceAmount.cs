@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VegetableShop.Interfaces;
+﻿using VegetableShop.Interfaces;
 using VegetableShop.Models;
 
 namespace VegetableShop.Services.Offers
@@ -22,7 +17,7 @@ namespace VegetableShop.Services.Offers
             DiscountAmount = discountAmount;
         }
 
-        public void Apply(ref Receipt receipt)
+        public Receipt Apply(Receipt receipt)
         {
             var item = receipt.Items.FirstOrDefault(i => i.Product == RequiredProduct);
             if (item != null)
@@ -35,6 +30,8 @@ namespace VegetableShop.Services.Offers
                     receipt.ApplyDiscount(RequiredProduct, totalDiscount, Description);
                 }
             }
+
+            return receipt;
         }
     }
 }

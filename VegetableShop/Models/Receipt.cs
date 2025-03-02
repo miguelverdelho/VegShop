@@ -1,9 +1,11 @@
-﻿namespace VegetableShop.Models
+﻿using System.Text;
+
+namespace VegetableShop.Models
 {
     public class Receipt
     {
-        public List<ReceiptItem> Items { get; } = new List<ReceiptItem>();
-        public List<string> AppliedOffers { get; } = new List<string>();
+        public List<ReceiptItem> Items { get; } = [];
+        public List<string> AppliedOffers { get; } = [];
         private decimal _total;
 
         public void AddItem(string product, int quantity, decimal pricePerUnit)
@@ -16,23 +18,31 @@
         public void ApplyDiscount(string product, decimal discount, string offerDescription)
         {
             _total -= discount;
-            AppliedOffers.Add($"{offerDescription} - Discount Applied: {discount:C2}");
+            AppliedOffers.Add($"{offerDescription} Discount Applied: {discount:C2}");
         }
 
         public string GenerateReceipt()
         {
-            var receiptText = "Receipt:\n";
+            var receiptBuilder = new StringBuilder();
+            receiptBuilder.AppendLine("Receipt:");
+
             foreach (var item in Items)
             {
-                receiptText += $"{item.Product} x{item.Quantity} @ {item.PricePerUnit:C2} = {item.SubTotal:C2}\n";
+                receiptBuilder.AppendLine($"{item.Product} x{item.Quantity} @ {item.PricePerUnit:C2} = {item.SubTotal:C2}");
             }
-            receiptText += $"Total: {_total:C2}\n";
 
-            if (AppliedOffers.Any())
+            receiptBuilder.AppendLine($"Total: {_total:C2}");
+
+            if (AppliedOffers.Count != 0)
             {
-                receiptText += "\nOffers Applied:\n";
-                receiptText += string.Join("\n", AppliedOffers);
+                receiptBuilder.AppendLine("\nOffers Applied:");
+                foreach (var offer in AppliedOffers)
+                {
+                    receiptBuilder.AppendLine(offer);
+                }
             }
+
+            string receiptText = receiptBuilder.ToString();
             Console.WriteLine(receiptText);
             return receiptText;
         }

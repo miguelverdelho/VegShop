@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.Linq;
 using VegetableShop.Common;
 using VegetableShop.Interfaces;
 using VegetableShop.Models;
@@ -21,6 +19,8 @@ namespace VegetableShop.Services
 
         private void LoadOffersFromConfig(IConfiguration configuration)
         {
+            // all the config access should be isolated into a separate service
+
             var buyXGetYFreeOffers = configuration.GetSection("Offers:BuyXGetYFree").Get<List<BuyXGetYFreeConfig>>();
             if (buyXGetYFreeOffers != null)
             {

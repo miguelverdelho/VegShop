@@ -2,6 +2,7 @@
 using VegetableShop.Common;
 using VegetableShop.Interfaces;
 using VegetableShop.Models;
+using VegetableShop.Models.Error_Handling;
 
 namespace VegetableShop.Services
 {
@@ -24,21 +25,19 @@ namespace VegetableShop.Services
             return receipt;
         }
 
-        public bool ValidateOrder()
+        public void ValidateOrder()
         {
             if (_purchases.Count == 0 || _products.Count == 0)
-                return false;
+                throw new InvalidOrderException("Invalid order. Products or purchases are empty.");
 
             // all items in purchased need to be available
             // one can only buy positive ammounts
             if (_purchases.Any(p => !_products.Keys.Contains(p.Key) || p.Value <= 0))
-                return false;
+                throw new InvalidOrderException("Purchase includes non existing product.");
 
             // unit price needs to be positive
             if (_products.Any(p => p.Value <= 0))
-                return false;
-
-            return true;
+                throw new InvalidOrderException("Unit price needs to be positive.");
         }
     }
 }

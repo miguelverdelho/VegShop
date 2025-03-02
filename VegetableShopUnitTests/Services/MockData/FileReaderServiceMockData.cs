@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VegetableShop.UnitTests.Services.TestData
+namespace VegetableShop.UnitTests.Services.MockData
 {
     internal static class FileReaderServiceMockData
     {

@@ -1,9 +1,10 @@
 ﻿using VegetableShop.Interfaces;
 using VegetableShop.Models;
+using VegetableShop.Models.Error_Handling;
 
 namespace VegetableShop.Services.Offers
 {
-    class GetFreeXFromMultipleY : IOffer
+    public class GetFreeXFromMultipleY : IOffer
     {
         public string RequiredProduct { get; }
         public string FreeProduct { get; }
@@ -12,6 +13,11 @@ namespace VegetableShop.Services.Offers
 
         public GetFreeXFromMultipleY(string requiredProduct, int quantityRequired, string freeProduct)
         {
+            if (quantityRequired <= 0)
+                throw new InvalidOfferException("Quantities must be greater than 0.");
+            if (string.IsNullOrEmpty(requiredProduct) || string.IsNullOrEmpty(freeProduct))
+                throw new InvalidOfferException("Product cannot be empty.");
+
             RequiredProduct = requiredProduct;
             FreeProduct = freeProduct;
             QuantityRequired = quantityRequired;
@@ -25,9 +31,9 @@ namespace VegetableShop.Services.Offers
             if (requiredItem != null && requiredItem.Quantity >= QuantityRequired
                 && freeItem != null && freeItem.Quantity > 0)
             {
-                int freeItems = requiredItem.Quantity / QuantityRequired;
+                var freeItems = requiredItem.Quantity / QuantityRequired;
 
-                decimal discount = freeItems * freeItem.PricePerUnit;
+                var discount = freeItems * freeItem.PricePerUnit;
 
                 receipt.ApplyDiscount(FreeProduct, discount, Description);
             }

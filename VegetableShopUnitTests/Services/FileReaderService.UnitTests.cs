@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
+using VegetableShop.Models.Error_Handling;
 using VegetableShop.Services;
-using VegetableShop.UnitTests.Services.TestData;
+using VegetableShop.UnitTests.Services.MockData;
 
 namespace VegetableShopUnitTests.Services
 {
@@ -107,25 +108,25 @@ namespace VegetableShopUnitTests.Services
         }
 
         [Fact]
-        public void ReadPurchasesFromFile_ThrowsEmptyListException_EmptyValidFile()
+        public void ReadPurchasesFromFile_ThrowsInvalidFileInputException_EmptyValidFile()
         {
             // Arrange
             var purchases = FileReaderServiceMockData.EmptyPurchases;
             File.WriteAllLines(_productsTestFilePath, purchases);
 
             // Act & Assert
-            Assert.Throws<Exception>(() => _fileReaderService?.ReadPurchasesFromFile());
+            Assert.Throws<InvalidFileInputException>(() => _fileReaderService?.ReadPurchasesFromFile());
         }
 
         [Fact]
-        public void ReadPurchasesFromFile_ThrowsArgumentException_InvalidFile()
+        public void ReadPurchasesFromFile_ThrowsInvalidFileInputException_InvalidFile()
         {
             // Arrange
             var purchases = FileReaderServiceMockData.InvalidPurchases;
             File.WriteAllLines(_purchasesTestFilePath, purchases);
 
             // Act && Assert
-            Assert.Throws<ArgumentException>(() => _fileReaderService?.ReadPurchasesFromFile());
+            Assert.Throws<InvalidFileInputException>(() => _fileReaderService?.ReadPurchasesFromFile());
         }
         #endregion
 
@@ -149,25 +150,25 @@ namespace VegetableShopUnitTests.Services
             }
         }
         [Fact]
-        public void ReadProductsFromFile_ThrowsArgumentException_InvalidFile()
+        public void ReadProductsFromFile_ThrowsInvalidFileInputException_InvalidFile()
         {
             // Arrange
             var products = FileReaderServiceMockData.InvalidProducts;
             File.WriteAllLines(_productsTestFilePath, products);
 
             // Act && Assert
-            Assert.Throws<ArgumentException>(() => _fileReaderService?.ReadProductsFromFile());
+            Assert.Throws<InvalidFileInputException>(() => _fileReaderService?.ReadProductsFromFile());
         }
 
         [Fact]
-        public void ReadProductsFromFile_ThrowsEmptyListException_EmptyValidFile()
+        public void ReadProductsFromFile_ThrowsInvalidFileInputException_EmptyValidFile()
         {
             // Arrange
             var products = FileReaderServiceMockData.EmptyProducts;
             File.WriteAllLines(_productsTestFilePath, products);
 
             // Act & Assert
-            Assert.Throws<Exception>(() => _fileReaderService?.ReadProductsFromFile());
+            Assert.Throws<InvalidFileInputException>(() => _fileReaderService?.ReadProductsFromFile());
         }
         #endregion
 

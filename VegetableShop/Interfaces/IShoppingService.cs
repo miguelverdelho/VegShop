@@ -2,11 +2,11 @@
 
 namespace VegetableShop.Interfaces
 {
-    public interface IShoppingService : IBaseSingleton
+    public interface IShoppingService : IBaseTransient
     {
         public void LoadProducts(Dictionary<string, decimal> products);
         public void LoadPurchases(Dictionary<string, int> purchases);
-        public bool ValidateOrder();
+        public void ValidateOrder();
         public Receipt ProcessOrder();
     }
 }

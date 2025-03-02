@@ -1,4 +1,4 @@
 ﻿namespace VegetableShop.Interfaces
 {
-    public interface IBaseSingleton { }
+    public interface IBaseTransient { }
 }

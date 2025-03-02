@@ -16,10 +16,10 @@ builder.Configuration
 
 // Register interfaces
 builder.Services.Scan(scan => scan
-    .FromAssemblyOf<IBaseSingleton>()
-    .AddClasses(classes => classes.AssignableTo<IBaseSingleton>())
+    .FromAssemblyOf<IBaseTransient>()
+    .AddClasses(classes => classes.AssignableTo<IBaseTransient>())
     .AsImplementedInterfaces()
-    .WithSingletonLifetime());
+    .WithTransientLifetime());
 
 //Set up global error handling
 

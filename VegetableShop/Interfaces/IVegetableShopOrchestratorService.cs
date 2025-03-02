@@ -1,6 +1,6 @@
 ﻿namespace VegetableShop.Interfaces
 {
-    public interface IVegetableShopOrchestratorService : IBaseSingleton
+    public interface IVegetableShopOrchestratorService : IBaseTransient
     {
         public void Run();
     }

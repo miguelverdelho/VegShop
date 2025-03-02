@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Moq;
+using VegetableShop.Models.Error_Handling;
 using VegetableShop.Services;
-using VegetableShop.UnitTests.Services.TestData;
+using VegetableShop.UnitTests.Services.MockData;
 
 namespace VegetableShopUnitTests.Services
 {
@@ -15,80 +16,67 @@ namespace VegetableShopUnitTests.Services
             _mockLogger = new Mock<ILogger<ShoppingService>>();
             _shoppingService = new ShoppingService(_mockLogger.Object);
         }
+
         #region ValidateOrder
         [Fact]
-        public void ValidateOrder_ReturnsTrue_WhenOrderIsValid()
+        public void ValidateOrder_DoesNotThrow_WhenOrderIsValid()
         {
             // Arrange
             var products = ShoppingServiceMockData.ValidProducts;
             var purchases = ShoppingServiceMockData.ValidOrder;
             LoadItemsToService(products, purchases);
 
-            // Act
-            var result = _shoppingService?.ValidateOrder();
-
-            // Assert
-            Assert.True(result);
+            // Act & Assert
+            var exception = Record.Exception(() => _shoppingService?.ValidateOrder());
+            Assert.Null(exception);
         }
 
         [Fact]
-        public void ValidateOrder_ReturnsFalse_WhenOrderIsEmpty()
+        public void ValidateOrder_ThrowsInvalidOrderException_WhenOrderIsEmpty()
         {
             // Arrange
             var products = ShoppingServiceMockData.ValidProducts;
             var purchases = ShoppingServiceMockData.EmptyOrder;
             LoadItemsToService(products, purchases);
 
-            // Act
-            var result = _shoppingService?.ValidateOrder();
-
-            // Assert
-            Assert.False(result);
+            // Act & Assert
+            Assert.Throws<InvalidOrderException>(() => _shoppingService?.ValidateOrder());
         }
 
         [Fact]
-        public void ValidateOrder_ReturnsFalse_WhenOrderContainsNonExisitingItem()
+        public void ValidateOrder_ThrowsInvalidOrderException_WhenOrderContainsNonExistingItem()
         {
             // Arrange
             var purchases = ShoppingServiceMockData.NonExisitingItem;
             var products = ShoppingServiceMockData.ValidProducts;
             LoadItemsToService(products, purchases);
 
-            // Act
-            var result = _shoppingService?.ValidateOrder();
-
-            // Assert
-            Assert.False(result);
+            // Act & Assert
+            Assert.Throws<InvalidOrderException>(() => _shoppingService?.ValidateOrder());
         }
 
         [Fact]
-        public void ValidateOrder_ReturnsFalse_WhenOrderContainsNegativeQuantity()
+        public void ValidateOrder_ThrowsInvalidOrderException_WhenOrderContainsNegativeQuantity()
         {
             // Arrange
             var purchases = ShoppingServiceMockData.NegativeQuantityPurchase;
             var products = ShoppingServiceMockData.ValidProducts;
             LoadItemsToService(products, purchases);
 
-            // Act
-            var result = _shoppingService?.ValidateOrder();
-
-            // Assert
-            Assert.False(result);
+            // Act & Assert
+            Assert.Throws<InvalidOrderException>(() => _shoppingService?.ValidateOrder());
         }
 
         [Fact]
-        public void ValidateOrder_ReturnsFalse_WhenProductsContainsNegativePrice()
+        public void ValidateOrder_ThrowsInvalidOrderException_WhenProductsContainNegativePrice()
         {
             // Arrange
             var purchases = ShoppingServiceMockData.ValidOrder;
             var products = ShoppingServiceMockData.NegativePriceProduct;
             LoadItemsToService(products, purchases);
 
-            // Act
-            var result = _shoppingService?.ValidateOrder();
-
-            // Assert
-            Assert.False(result);
+            // Act & Assert
+            Assert.Throws<InvalidOrderException>(() => _shoppingService?.ValidateOrder());
         }
         #endregion
 

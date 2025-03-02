@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using VegetableShop.Common;
 using VegetableShop.Interfaces;
+using VegetableShop.Models.Error_Handling;
 
 namespace VegetableShop.Services
 {
@@ -22,6 +23,10 @@ namespace VegetableShop.Services
             else if(ex is ArgumentException)
             {
                 _logger.LogError($"Invalid Argument Format: {ex.Message}");
+            }
+            else if (ex is InvalidOfferException)
+            {
+                _logger.LogError($"Invalid Offer: {ex.Message}");
             }
             else
             {

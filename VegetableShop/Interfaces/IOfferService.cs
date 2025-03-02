@@ -2,7 +2,7 @@
 
 namespace VegetableShop.Interfaces
 {
-    public interface IOfferService : IBaseSingleton
+    public interface IOfferService : IBaseTransient
     {
         public Receipt ApplyOffers(Receipt receipt);
     }

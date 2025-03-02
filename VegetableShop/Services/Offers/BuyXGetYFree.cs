@@ -1,5 +1,6 @@
 ﻿using VegetableShop.Interfaces;
 using VegetableShop.Models;
+using VegetableShop.Models.Error_Handling;
 
 namespace VegetableShop.Services.Offers
 {
@@ -12,6 +13,12 @@ namespace VegetableShop.Services.Offers
 
         public BuyXGetYFree(string product, int requiredQuantity, int freeQuantity)
         {
+            if(requiredQuantity <= 0 || freeQuantity <= 0)
+                throw new InvalidOfferException("Quantities must be greater than 0.");
+
+            if (string.IsNullOrEmpty(product))
+                throw new InvalidOfferException("Product cannot be empty.");
+
             RequiredProduct = product;
             RequiredQuantity = requiredQuantity;
             FreeQuantity = freeQuantity;
@@ -22,8 +29,8 @@ namespace VegetableShop.Services.Offers
             var item = receipt.Items.FirstOrDefault(i => i.Product == RequiredProduct);
             if (item != null && item.Quantity >= RequiredQuantity)
             {
-                int freeItems = item.Quantity / RequiredQuantity * FreeQuantity;
-                decimal discount = freeItems * item.PricePerUnit;
+                var freeItems = item.Quantity / RequiredQuantity * FreeQuantity;
+                var discount = freeItems * item.PricePerUnit;
 
                 receipt.ApplyDiscount(RequiredProduct, discount, Description);
             }

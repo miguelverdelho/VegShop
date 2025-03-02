@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using VegetableShop.Common;
 using VegetableShop.Interfaces;
+using VegetableShop.Models.Error_Handling;
 
 namespace VegetableShop.Services
 {
@@ -32,7 +33,7 @@ namespace VegetableShop.Services
             var products = ParseLines(_productsFilePath, decimal.Parse);
 
             if (products.Count == 0)
-                throw new Exception("Products file is empty");
+                throw new InvalidFileInputException("Products file is empty");
 
             _logger.LogInformation($"Loaded {products.Count} products");
 
@@ -46,7 +47,7 @@ namespace VegetableShop.Services
             var purchases = ParseLines(_purchasesFilePath, int.Parse);
 
             if (purchases.Count == 0)
-                throw new Exception("Purchases file is empty");
+                throw new InvalidFileInputException("Purchases file is empty");
 
             _logger.LogInformation($"Loaded {purchases.Count} purchases");
 
@@ -66,7 +67,7 @@ namespace VegetableShop.Services
             }
             catch (Exception ex)
             {
-                throw new ArgumentException("Error parsing lines", ex);
+                throw new InvalidFileInputException("Error parsing lines", ex);
             }
             return dictionary;
         }

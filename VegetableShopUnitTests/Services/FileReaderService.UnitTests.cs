@@ -175,6 +175,4 @@ namespace VegetableShopUnitTests.Services
         public FileReaderService CreateDefaultService() => new FileReaderService(_mockLogger!.Object, _mockConfiguration.Object);
         #endregion
     }
-
-
 }
